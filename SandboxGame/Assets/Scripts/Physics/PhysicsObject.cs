@@ -15,8 +15,16 @@ public abstract class PhysicsObject : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
 
     }
+    void FixedUpdate() {
+        
+        if (!GameManager.instance.windActive) return;
+        rb.AddForce(GameManager.instance.windDirection.normalized * GameManager.instance.windForce);
+
+    }
 
     public virtual void OnHit(PhysicsObject other) {
+
+        if (health <= 0.0f) return;
 
         health -= Mathf.Abs((rb.velocity - other.rb.velocity).magnitude) * other.rb.mass;
         if (health <= 0.0f)
