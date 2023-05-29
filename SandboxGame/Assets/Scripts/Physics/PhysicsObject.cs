@@ -2,6 +2,9 @@ using UnityEngine;
 
 public abstract class PhysicsObject : MonoBehaviour {
 
+    public bool moveable = true;
+    [SerializeField] private bool affectByWind = true;
+
     [SerializeField] protected float health;
     
     [SerializeField] private Rigidbody rb;
@@ -17,7 +20,7 @@ public abstract class PhysicsObject : MonoBehaviour {
     }
     void FixedUpdate() {
         
-        if (!GameManager.instance.windActive) return;
+        if (!GameManager.instance.windActive || !affectByWind) return;
         rb.AddForce(GameManager.instance.windDirection.normalized * GameManager.instance.windForce);
 
     }

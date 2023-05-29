@@ -17,11 +17,6 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] private float camXAxisRotOffset = 9.0f;
     [SerializeField] private float tpMinX = -70.0f;
     [SerializeField] private float tpMaxX = 10.0f;
-
-    [Header("Body Parts")]
-    [SerializeField] private Transform camHandle;
-    [SerializeField] private Transform cam;
-
     private Rigidbody rb;
 
     private Vector3 direction;
@@ -31,7 +26,7 @@ public class PlayerController : MonoBehaviour {
 
     private bool thirdPersonLast;
 
-    void Awake() {
+    void Start() {
         
         rb = GetComponent<Rigidbody>();
         thirdPersonLast = thirdPerson;
@@ -41,13 +36,13 @@ public class PlayerController : MonoBehaviour {
 
         if(thirdPerson) {
 
-            cam.transform.localPosition = camOffset;
-            cam.transform.localRotation = Quaternion.Euler(camXAxisRotOffset, 0.0f, 0.0f);
+            Player.instance.mainCam.localPosition = camOffset;
+            Player.instance.mainCam.localRotation = Quaternion.Euler(camXAxisRotOffset, 0.0f, 0.0f);
 
         } else {
 
-            cam.transform.localPosition = new Vector3(0.0f, 0.8f, 0.0f);
-            cam.transform.localRotation = camHandle.rotation;
+            Player.instance.mainCam.localPosition = Vector3.zero;
+            Player.instance.mainCam.localRotation = Quaternion.identity;
 
         }
 
@@ -57,13 +52,13 @@ public class PlayerController : MonoBehaviour {
 
         if(!thirdPersonLast && thirdPerson) {
 
-            cam.transform.localPosition = camOffset;
-            cam.transform.localRotation = Quaternion.Euler(camXAxisRotOffset, 0.0f, 0.0f);
+            Player.instance.mainCam.localPosition = camOffset;
+            Player.instance.mainCam.localRotation = Quaternion.Euler(camXAxisRotOffset, 0.0f, 0.0f);
 
         } else if(thirdPersonLast && !thirdPerson) {
 
-            cam.transform.localPosition = new Vector3(0.0f, 0.8f, 0.0f);
-            cam.transform.localRotation = camHandle.rotation;
+            Player.instance.mainCam.localPosition = Vector3.zero;
+            Player.instance.mainCam.localRotation = Quaternion.identity;
 
         }
         
@@ -80,10 +75,8 @@ public class PlayerController : MonoBehaviour {
         direction = transform.forward * vertical + transform.right * horizontal;
 
         transform.rotation = Quaternion.Euler(0.0f, mouseRotation.y, 0.0f);
-        if (thirdPerson)
-            camHandle.rotation = Quaternion.Euler(mouseRotation.x, mouseRotation.y, 0.0f);
-        else
-            cam.rotation = Quaternion.Euler(mouseRotation.x, mouseRotation.y, 0.0f);
+        
+        Player.instance.camHandle.rotation = Quaternion.Euler(mouseRotation.x, mouseRotation.y, 0.0f);
 
         if(Input.GetKeyDown(KeyCode.LeftShift)) multiplier = sprintMultiplier;
         else if(Input.GetKeyUp(KeyCode.LeftShift)) multiplier = 1.0f;
